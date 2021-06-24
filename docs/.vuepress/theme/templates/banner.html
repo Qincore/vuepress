@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Banner</title>
+    <link rel="stylesheet" href="./styles.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <style>body{background:#000028}.fill-width{z-index:1}.canvas-container>canvas{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;height:100%}h1{z-index:2;text-align:center;white-space:nowrap;pointer-events:none;font-size:45px;letter-spacing:.9em;padding-left:.9em;text-transform:uppercase;font-weight:normal}@media (max-width:850px){h1{font-size:35px}}@media (max-width:450px){h1{font-size:24px}}</style>
+</head>
+<body>
+	<div id="container" class="fill-width"></div>
+    <h1 class="center">ZEIR</h1>
+
+
+<script src="./three-92.min.js" charset="utf-8"></script>
+
+<script type="x-shader/x-vertex" id="vertexShader1">
+vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+float snoise(vec2 v) {
+    const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
+                        0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
+                        -0.577350269189626,  // -1.0 + 2.0 * C.x
+                        0.024390243902439); // 1.0 / 41.0
+    vec2 i  = floor(v + dot(v, C.yy) );
+    vec2 x0 = v -   i + dot(i, C.xx);
+    vec2 i1;
+    i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+    vec4 x12 = x0.xyxy + C.xxzz;
+    x12.xy -= i1;
+    i = mod289(i); // Avoid truncation effects in permutation
+    vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+        + i.x + vec3(0.0, i1.x, 1.0 ));
+
+    vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+    m = m*m ;
+    m = m*m ;
+    vec3 x = 2.0 * fract(p * C.www) - 1.0;
+    vec3 h = abs(x) - 0.5;
+    vec3 ox = floor(x + 0.5);
+    vec3 a0 = x - ox;
+    m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+    vec3 g;
+    g.x  = a0.x  * x0.x  + h.x  * x0.y;
+    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+    return 130.0 * dot(m, g);
+}
+uniform float u_time;
+uniform float u_timeOffset;
+uniform vec2 u_mousePosition;
+uniform float u_mouseMovement;
+
+varying float vDistortion;
+varying vec2 vUv;
+
+void main() {
+    vUv = uv;
+    vDistortion = snoise(vUv.xx * 3. - u_time * 0.15 - u_timeOffset);
+    // vDistortion += sin(vUv.x * 10. * 3.14159265) * 0.2;
+    vec3 pos = position;
+    pos.z += (vDistortion * (2. + (1. - u_mousePosition.y) * 2.));
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+}
+</script>
+<script type="x-shader/x-fragment" id="fragmentShader1">
+vec3 rgb(float r, float g, float b) {
+    return vec3(r / 255., g / 255., b / 255.);
+}
+
+vec3 rgb(float c) {
+    return vec3(c / 255., c / 255., c / 255.);
+}
+vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+float snoise(vec2 v) {
+    const vec4 C = vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
+                        0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
+                        -0.577350269189626,  // -1.0 + 2.0 * C.x
+                        0.024390243902439); // 1.0 / 41.0
+    vec2 i  = floor(v + dot(v, C.yy) );
+    vec2 x0 = v -   i + dot(i, C.xx);
+    vec2 i1;
+    i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+    vec4 x12 = x0.xyxy + C.xxzz;
+    x12.xy -= i1;
+    i = mod289(i); // Avoid truncation effects in permutation
+    vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+        + i.x + vec3(0.0, i1.x, 1.0 ));
+
+    vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+    m = m*m ;
+    m = m*m ;
+    vec3 x = 2.0 * fract(p * C.www) - 1.0;
+    vec3 h = abs(x) - 0.5;
+    vec3 ox = floor(x + 0.5);
+    vec3 a0 = x - ox;
+    m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+    vec3 g;
+    g.x  = a0.x  * x0.x  + h.x  * x0.y;
+    g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+    return 130.0 * dot(m, g);
+}
+
+uniform vec3 u_bg;
+uniform vec3 u_color1;
+uniform vec3 u_color2;
+uniform vec2 u_mousePosition;
+uniform float u_time;
+uniform float u_timeOffset;
+
+varying vec2 vUv;
+varying float vDistortion;
+
+void main() {
+    vec3 bg = rgb(u_bg.r, u_bg.g, u_bg.b);
+    vec3 c1 = rgb(u_color1.r, u_color1.g, u_color1.b);
+    vec3 c2 = rgb(u_color2.r, u_color2.g, u_color2.b);
+
+    float noise1 = snoise(vUv + u_time * 0.08);
+    float noise2 = snoise(vUv * 2. + u_time * 0.1 + u_timeOffset);
+
+    vec3 color = bg;
+    color = mix(
+        color,
+        c1,
+        noise1 * 0.6
+    );
+    color = mix(
+        color,
+        c2,
+        noise2 * .4
+    );
+
+    color = mix(
+        color,
+        mix(c1, c2, vUv.x),
+        vDistortion
+    );
+
+    float borderWidth = 0.1;
+    float smoothingFactor = 4.;
+    float border = smoothstep(borderWidth, borderWidth + borderWidth * smoothingFactor, vUv.x) *
+        smoothstep(borderWidth - borderWidth * smoothingFactor, borderWidth, 1. - vUv.x) *
+        smoothstep(borderWidth, borderWidth + borderWidth * smoothingFactor, vUv.y) *
+        smoothstep(borderWidth, borderWidth + borderWidth * smoothingFactor, 1. - vUv.y);
+
+    color = mix(
+        color,
+        rgb(0., 0., 40.),
+        1. -border
+    );
+
+    gl_FragColor = vec4(color, 1.0);
+}
+</script>
+
+<script>var createHeroInteractive=function($container){'use strict';var renderer,scene,camera,pixelRatio=Math.min(window.devicePixelRatio,1.5),geometry1,material1,mesh1,geometry2,material2,mesh2,geometry3,material3,mesh3,geometry4,material4,mesh4,fov=45;var mousePosition={x:0.5,y:0.5,};var v2MousePosition=new THREE.Vector2(mousePosition.x,mousePosition.y);var start=Date.now();var fixedTime=0,timeOffset=0,dynamicTime=0;var w,h,isMobile;var camX=0;var camY=0;var isFocused=true,isInited=false,inViewport=false;window.addEventListener('blur',function(){isFocused=false;});window.addEventListener('focus',function(){isFocused=true;if(isInited){render();}});function updateSize(){w=$container.offsetWidth;h=$container.offsetHeight;isMobile=w<800;}var mousePreviousInertiaPosition={x:0,y:0,};var mouseInertiaPosition={x:new M(0,1,0.2,0.09,-0.1),y:new M(0,1,0.2,0.09,-0.1),};var v2MouseInertiaPosition=new THREE.Vector2(mouseInertiaPosition.x.value,mouseInertiaPosition.y.value);var mouseMovement=0;function M(b,c,f,g,h){var e=-Math.abs(h);this.value=b;this.s=!0;var a=0;this.update=function(d){a+=(d-this.value)*f;a*=g;this.value+=a;this.value<b?(this.value=b,0>a&&(a*=e)):this.value>c&&(this.value=c,0<a&&(a*=e));this.s=Math.abs(a)<.001*(c-b)&&.1>Math.abs(this.value-d)?!0:!1;return this.value};this.setValue=function(d){a=0;this.s=!0;return this.value=Math.min(c,Math.max(b,d))}}function parseSvg(C){function F(b,g){if(1===b.nodeType){switch(b.nodeName){case"svg":break;case"g":break;case"path":b.hasAttribute("d")&&z(g)&&y.push(G(b,g));break;case"rect":z(g)&&y.push(H(b,g));break;case"polygon":z(g)&&y.push(I(b,g));break;case"polyline":z(g)&&y.push(J(b,g));break;case"circle":z(g)&&y.push(K(b,g));break;case"ellipse":z(g)&&y.push(L(b,g));break;case"line":z(g)&&y.push(M(b,g));break;default:console.log(b)}for(var a=b.childNodes,c=0;c<a.length;c++)F(a[c],g)}}function G(b,g){function a(){for(var a,b,c=!1;k<v;){b=d.charCodeAt(k);if(44!==b&&32!==b)break;k++}for(a=45===b?k++:k;k<v;)if(b=d.charCodeAt(k),48<=b&&57>=b)k++;else if(46===b)k++,c=!0;else return a=d.substring(a,k),c?parseFloat(a):parseInt(a);a=d.substring(a);return c?parseFloat(a):parseInt(a)}function c(){for(var a;k<v;){a=d.charCodeAt(k);if(44!==a&&32!==a)break;k++}a=d.charCodeAt(k);return 45===a||48<=a&&57>=a}var h=new THREE.ShapePath,t=Math.PI/180,d=b.getAttribute("d"),k=1,v=d.length,w,e=0,f=0,l=0,m=0,y=null,z=null,n=0,A=0,p=0,u=0,x=0,q=0,r=0,B=0,D=0;for(w=d[0];k<=v;){var C=!0;switch(w){case"M":e=a();f=a();h.moveTo(e,f);w="L";y=e;z=f;break;case"m":e+=a();f+=a();h.moveTo(e,f);w="l";y=e;z=f;break;case"Z":case"z":C=!1;e===y&&f===z||h.lineTo(y,z);break;case"L":case"H":case"V":l="V"===w?e:a();m="H"===w?f:a();h.lineTo(l,m);e=l;f=m;break;case"l":case"h":case"v":l="v"===w?e:e+a();m="h"===w?f:f+a();h.lineTo(l,m);e=l;f=m;break;case"C":n=a(),p=a();case"S":"S"===w&&(n=2*e-A,p=2*f-u);A=a();u=a();l=a();m=a();h.bezierCurveTo(n,p,A,u,l,m);e=l;f=m;break;case"c":n=e+a(),p=f+a();case"s":"s"===w&&(n=2*e-A,p=2*f-u);A=e+a();u=f+a();l=e+a();m=f+a();h.bezierCurveTo(n,p,A,u,l,m);e=l;f=m;break;case"Q":n=a(),p=a();case"T":"T"===w&&(n=2*e-n,p=2*f-p);l=a();m=a();h.quadraticCurveTo(n,p,l,m);e=l;f=m;break;case"q":n=e+a(),p=f+a();case"t":"t"===w&&(n=2*e-n,p=2*f-p);l=e+a();m=f+a();h.quadraticCurveTo(n,p,l,m);e=l;f=m;break;case"A":x=a();q=a();r=a()*t;B=a();D=a();l=a();m=a();x!==q&&console.warn("Forcing elliptical arc to be a circular one :(",x,q);n=Math.cos(r)*(e-l)/2+Math.sin(r)*(f-m)/2;p=-Math.sin(r)*(e-l)/2+Math.cos(r)*(f-m)/2;u=Math.sqrt((x*x*q*q-x*x*p*p-q*q*n*n)/(x*x*p*p+q*q*n*n));B===D&&(u=-u);A=u*x*p/q;u=u*-q*n/x;e=Math.cos(r)*A-Math.sin(r)*u+(e+l)/2;f=Math.sin(r)*A+Math.cos(r)*u+(f+m)/2;r=new THREE.Vector2(1,0);B=new THREE.Vector2((n-A)/x,(p-u)/q);var E=Math.acos(r.dot(B)/r.length()/B.length());0>r.x*B.y-r.y*B.x&&(E=-E);r.x=(-n-A)/x;r.y=(-p-u)/q;q=Math.acos(B.dot(r)/B.length()/r.length());0>B.x*r.y-B.y*r.x&&(q=-q);!D&&0<q&&(q-=2*Math.PI);D&&0>q&&(q+=2*Math.PI);h.absarc(e,f,x,E,E+q,D);e=l;f=m;break;default:throw Error("weird path command: "+w);}C&&c()||(w=d[k++])}return h}function H(b,g){var a=parseFloat(b.getAttribute("x")||0),c=parseFloat(b.getAttribute("y")||0),h=parseFloat(b.getAttribute("rx")||0),t=parseFloat(b.getAttribute("ry")||0),d=parseFloat(b.getAttribute("width")),k=parseFloat(b.getAttribute("height")),v=new THREE.ShapePath;v.moveTo(a+2*h,c);v.lineTo(a+d-2*h,c);0===h&&0===t||v.bezierCurveTo(a+d,c,a+d,c,a+d,c+2*t);v.lineTo(a+d,c+k-2*t);0===h&&0===t||v.bezierCurveTo(a+d,c+k,a+d,c+k,a+d-2*h,c+k);v.lineTo(a+2*h,c+k);if(0!==h||0!==t)v.bezierCurveTo(a,c+k,a,c+k,a,c+k-2*t),v.lineTo(a,c+2*t),v.bezierCurveTo(a,c,a,c,a+2*h,c);return v}function I(b,g){var a=new THREE.ShapePath,c=0;b.getAttribute("points").replace(/(-?[\d\.?]+)[,|\s](-?[\d\.?]+)/g,function(b,g,d){b=parseFloat(g);d=parseFloat(d);0===c?a.moveTo(b,d):a.lineTo(b,d);c++});a.currentPath.autoClose=!0;return a}function J(b,g){var a=new THREE.ShapePath,c=0;b.getAttribute("points").replace(/(-?[\d\.?]+)[,|\s](-?[\d\.?]+)/g,function(b,g,d){b=parseFloat(g);d=parseFloat(d);0===c?a.moveTo(b,d):a.lineTo(b,d);c++});a.currentPath.autoClose=!1;return a}function K(b,g){var a=parseFloat(b.getAttribute("cx")),c=parseFloat(b.getAttribute("cy")),h=parseFloat(b.getAttribute("r")),t=new THREE.Path;t.absarc(a,c,h,0,2*Math.PI);a=new THREE.ShapePath;a.subPaths.push(t);return a}function L(b,g){var a=parseFloat(b.getAttribute("cx")),c=parseFloat(b.getAttribute("cy")),h=parseFloat(b.getAttribute("rx")),t=parseFloat(b.getAttribute("ry")),d=new THREE.Path;d.absellipse(a,c,h,t,0,2*Math.PI);a=new THREE.ShapePath;a.subPaths.push(d);return a}function M(b,g){var a=parseFloat(b.getAttribute("x1")),c=parseFloat(b.getAttribute("y1")),h=parseFloat(b.getAttribute("x2")),t=parseFloat(b.getAttribute("y2")),d=new THREE.ShapePath;d.moveTo(a,c);d.lineTo(h,t);d.currentPath.autoClose=!1;return d}function z(b){return"none"!==b.fill&&"transparent"!==b.fill}var y=[];C=(new DOMParser).parseFromString(C,"image/svg+xml");F(C.documentElement,{fill:"#000"});return y}init();function init(){updateSize();scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(fov,w/h,1,800);camera.position.z=isMobile?200:150;scene.add(camera);geometry1=new THREE.PlaneGeometry(280,280,isMobile?50:100,isMobile?50:100);material1=new THREE.ShaderMaterial({uniforms:{u_bg:{type:'v3',value:new THREE.Vector3(0,150,255)},u_color1:{type:'v3',value:new THREE.Vector3(0,243,255)},u_color2:{type:'v3',value:new THREE.Vector3(255,0,255)},u_time:{type:'f',value:0},u_mousePosition:{type:'v2',value:v2MouseInertiaPosition},u_mouseMovement:{type:'f',value:mouseMovement},},fragmentShader:document.querySelector('#fragmentShader1').textContent,vertexShader:document.querySelector('#vertexShader1').textContent,});mesh1=new THREE.Mesh(geometry1,material1);mesh1.position.set(-20,isMobile?150:140,-280);mesh1.scale.multiplyScalar(isMobile?2:2.4);mesh1.rotation.x=isMobile?-0.9:-1.0;mesh1.rotation.y=0.0;mesh1.rotation.z=0.1;scene.add(mesh1);geometry2=parseSvg('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve"><path d="M-64,268c41.9-32.2,124.8-13.2,134-11c41.6,9.9,50.9,25.4,91,29c38.4,3.5,49.9-8.8,98-18c70.9-13.5,78.6,6.9,177,1 c82.3-5,88-20,120-9c58.2,19.9,107.3,92.7,96,155c-2.5,14-15.3,66.9-145,121C354.7,599.5,48.3,661.4-60,508 C-113.6,432.1-115.8,307.8-64,268z"/></svg>');material2=new THREE.MeshBasicMaterial({color:0x191933,});geometry2=geometry2[0].toShapes();var geometry2ExtrudeSettings={amount:8,bevelEnabled:true,bevelSegments:2,steps:2,bevelSize:1,bevelThickness:1,};geometry2=new THREE.ExtrudeGeometry(geometry2,geometry2ExtrudeSettings);mesh2=new THREE.Mesh(geometry2,material2);mesh2.geometry.center();mesh2.position.set(0,-125,20);mesh2.rotation.x=Math.PI;mesh2.rotation.z=-0.2;mesh2.scale.multiplyScalar(0.5);scene.add(mesh2);geometry3=parseSvg('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve"><path d="M510,279c-43.2-42.4-106.6-46.8-124-48c-55.4-3.8-60.8,16.8-145,25c-74.3,7.2-141-1-141-1c-63-7.8-83.7-20.7-105-6 c-25.2,17.4-26.3,56.1-27,102c-0.3,21.7-1.6,105.4,27,157c79.8,143.8,454.9,152.8,542-3C573.1,440.4,566.8,334.7,510,279z"/></svg>');material3=new THREE.MeshBasicMaterial({color:0x191933,});geometry3=geometry3[0].toShapes();var geometry3ExtrudeSettings={amount:8,bevelEnabled:true,bevelSegments:2,steps:2,bevelSize:1,bevelThickness:1,};geometry3=new THREE.ExtrudeGeometry(geometry3,geometry3ExtrudeSettings);mesh3=new THREE.Mesh(geometry3,material3);mesh3.geometry.center();mesh3.position.set(0,-120,10);mesh3.rotation.x=Math.PI;mesh3.rotation.z=0.2;mesh3.scale.multiplyScalar(0.5);scene.add(mesh3);geometry4=parseSvg('<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve"><path d="M510,279c-43.2-42.4-106.6-46.8-124-48c-55.4-3.8-60.8,16.8-145,25c-74.3,7.2-141-1-141-1c-63-7.8-83.7-20.7-105-6 c-25.2,17.4-26.3,56.1-27,102c-0.3,21.7-1.6,105.4,27,157c79.8,143.8,454.9,152.8,542-3C573.1,440.4,566.8,334.7,510,279z"/></svg>');material4=new THREE.MeshBasicMaterial({color:0x22223a,});geometry4=geometry4[0].toShapes();var geometry4ExtrudeSettings={amount:8,bevelEnabled:true,bevelSegments:2,steps:2,bevelSize:1,bevelThickness:1,};geometry4=new THREE.ExtrudeGeometry(geometry4,geometry4ExtrudeSettings);mesh4=new THREE.Mesh(geometry4,material4);mesh4.geometry.center();mesh4.position.set(0,-120,15);mesh4.rotation.x=Math.PI;mesh4.scale.multiplyScalar(0.5);scene.add(mesh4);renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});renderer.setPixelRatio(pixelRatio);renderer.setSize(w,h);renderer.setClearColor(new THREE.Color('rgb(0,0,40)'));$container.appendChild(renderer.domElement);window.addEventListener('resize',handleResize);if('ontouchstart'in window){document.body.addEventListener('touchmove',handleTouchMove);}else{document.body.addEventListener('mousemove',handleMouseMove);}isInited=true;render();}function handleResize(){updateSize();renderer.setSize(w,h);camera.aspect=w/h;var v2WH=new THREE.Vector2(w,h);camera.updateProjectionMatrix();}function handleTouchMove(e){var touch=e.touches[0];mousePosition.x=touch.pageX/w;mousePosition.y=touch.pageY/h;}function handleMouseMove(e){mousePosition.x=e.pageX/w;mousePosition.y=e.pageY/h;}function render(timestamp){if(isFocused){camX=((mousePosition.x-0.5)*(isMobile?50:30)-camera.position.x)*0.05;camY=((mousePosition.y-0.5)*(isMobile?25:15)-camera.position.y)*0.05;fixedTime=0.0001*(Date.now()-start);timeOffset+=(Math.abs(camX)+Math.abs(camY))/10;dynamicTime=fixedTime+timeOffset;material1.uniforms.u_time.value=dynamicTime;mouseInertiaPosition.x.update(mousePosition.x);mouseInertiaPosition.y.update(mousePosition.y);v2MouseInertiaPosition=new THREE.Vector2(mouseInertiaPosition.x.value,mouseInertiaPosition.y.value);mouseMovement=Math.abs(mouseInertiaPosition.x.value-mousePreviousInertiaPosition.x)+Math.abs(mouseInertiaPosition.y.value-mousePreviousInertiaPosition.y);if(mouseMovement<0.0){mouseMovement=0;}else{mouseMovement*=5;}mousePreviousInertiaPosition.x=mouseInertiaPosition.x.value;mousePreviousInertiaPosition.y=mouseInertiaPosition.y.value;material1.uniforms.u_mouseMovement.value=mouseMovement;material1.uniforms.u_mousePosition.value=v2MouseInertiaPosition;camera.position.x+=camX;camera.position.y+=camY;camera.lookAt(scene.position);renderer.render(scene,camera);requestAnimationFrame(render);}}};createHeroInteractive(document.getElementById('container'));</script>
+</body>
+</html>
