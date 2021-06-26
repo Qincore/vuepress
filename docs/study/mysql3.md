@@ -84,4 +84,3 @@ SELECT e_name,e_add FROM t_emp WHERE e_year <> '2001';
 | 小红   | 四川雅安  | 2002   |
 
 ## `BETWEEN` 运算符
-

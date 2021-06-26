@@ -94,3 +94,126 @@
 
 ::: details 查看答案
 :::
+
+::: demo [vanilla]
+```html
+<html>
+  <button title="aaa" onclick="alert('你干嘛点我！')">点击</button>
+</html>
+```
+:::
+
+::: demo [vanilla]
+```html {6}
+<html>
+    <button id="ktDemoAlert">试一下</button>
+</html>
+<script>
+    document.querySelector("#ktDemoAlert").onclick = function(){
+        alert('点什么点！');
+    };
+</script>
+```
+:::
+
+::: demo [vanilla]
+```html {6}
+<html>
+    <button id="ktDemoPrompt">再试试</button>
+</html>
+<script>
+    document.querySelector("#ktDemoPrompt").onclick = function(){
+        prompt('今天天气好吗？');
+    };
+</script>
+```
+:::
+
+::: demo [vanilla]
+```html {6}
+<html>
+    <button id="ktDemoConfirm">再点</button>
+</html>
+<script>
+    document.querySelector("#ktDemoConfirm").onclick = function(){
+        confirm('确实删除吗？');
+    };
+</script>
+```
+:::
+
+::: demo [vanilla]
+```html {6}
+<html>
+    <button id="ktDemoConsole">点我输出</button>
+</html>
+<script>
+    document.querySelector("#ktDemoConsole").onclick = function(){
+        console.log('F12控制台，看到我了吗？');
+    };
+</script>
+```
+:::
+
+```html {7}
+<html>
+    <button id="ktDemoWrite">直接输出</button>
+
+</html>
+<script>
+    document.querySelector("#ktDemoWrite").onclick = function(){
+        document.write('自己返回！');
+    };
+</script>
+```
+
+::: demo [vanilla]
+```html {7}
+<html>
+    <button id="ktDemoPlus">查看结果</button>
+</html>
+<script>
+var a = 4;      //把数字 4 赋值给变量 a
+var b = 5;      //把数字 5 赋值给变量 b
+var c = a + b;  //将计算结果赋值给变量 c
+
+document.querySelector("#ktDemoPlus").onclick = function(){
+        alert(c);
+    };
+</script>
+```
+:::
+
+::: demo [vanilla]
+```html {7}
+<html>
+    <button id="ktDemoMultiplication">查看结果</button>
+</html>
+<script>
+var a = 4;      //把数字 4 赋值给变量 a
+var b = 5;      //把数字 5 赋值给变量 b
+var c = a * b;  //将计算结果赋值给变量 c
+
+document.querySelector("#ktDemoMultiplication").onclick = function(){
+        alert(c);
+    };
+</script>
+```
+:::
+
+::: demo [vanilla]
+```html {7}
+<html>
+    <button id="ktDemoCharacterString">查看结果</button>
+</html>
+<script>
+var str1 = '你好';        //把 你好 赋值给变量 str1
+var str2 = '世界！';      //把 世界！ 赋值给变量 str2
+var str3 = str1 + str2;   //将拼接结果赋值给变量 str3
+
+document.querySelector("#ktDemoCharacterString").onclick = function(){
+        alert(str3);
+    };
+</script>
+```
+:::

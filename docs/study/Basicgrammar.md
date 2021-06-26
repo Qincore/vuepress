@@ -64,22 +64,14 @@ var addUp = 100;
 
 ### `alert()` 方法
 
-在浏览器中弹出一个对话框,然后把要输出的内容展示出来   
+在浏览器中弹出一个对话框,然后把要输出的内容展示出来 
+
+<br/>
 
 **实例：**
 
-::: demo [vanilla]
-```html {6}
-<html>
-    <button id="ktDemoAlert">试一下</button>
-</html>
-<script>
-    document.querySelector("#ktDemoAlert").onclick = function(){
-        alert('点什么点！');
-    };
-</script>
-```
-:::
+<iframe width="100%" height="200" src="//jsrun.net/uJVKp/embedded/all/light" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+
 
 ::: warning 注意
 `alert` 都是把要输出的内容首先转换为字符串然后在输出的。
@@ -91,20 +83,11 @@ var addUp = 100;
 
 用于显示可提示用户进行输入的对话框
 
+<br/>
+
 **实例：**
 
-::: demo [vanilla]
-```html {6}
-<html>
-    <button id="ktDemoPrompt">再试试</button>
-</html>
-<script>
-    document.querySelector("#ktDemoPrompt").onclick = function(){
-        prompt('今天天气好吗？');
-    };
-</script>
-```
-:::
+<iframe width="100%" height="200" src="//jsrun.net/MJVKp/embedded/all/light" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 <br>
 <a-alert message="prompt()方法平时较少使用" type="warning" show-icon />
@@ -115,20 +98,11 @@ var addUp = 100;
 
 用于显示一个带有指定消息和确定及取消按钮的对话框
 
+<br/>
+
 **实例：**
 
-::: demo [vanilla]
-```html {6}
-<html>
-    <button id="ktDemoConfirm">再点</button>
-</html>
-<script>
-    document.querySelector("#ktDemoConfirm").onclick = function(){
-        confirm('确实删除吗？');
-    };
-</script>
-```
-:::
+<iframe width="100%" height="200" src="//jsrun.net/SJVKp/embedded/all/light" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 ---
 
@@ -136,20 +110,11 @@ var addUp = 100;
 
 在控制台上输出信息
 
+<br/>
+
 **实例：**
 
-::: demo [vanilla]
-```html {6}
-<html>
-    <button id="ktDemoConsole">点我输出</button>
-</html>
-<script>
-    document.querySelector("#ktDemoConsole").onclick = function(){
-        console.log('F12控制台，看到我了吗？');
-    };
-</script>
-```
-:::
+<iframe width="100%" height="200" src="//jsrun.net/4JVKp/embedded/all/light" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 ---
 
@@ -157,17 +122,11 @@ var addUp = 100;
 
 直接的在页面中输出的内容
 
-```html {7}
-<html>
-    <button id="ktDemoWrite">直接输出</button>
+<br/>
 
-</html>
-<script>
-    document.querySelector("#ktDemoWrite").onclick = function(){
-        document.write('自己返回！');
-    };
-</script>
-```
+**实例：**  
+
+<iframe width="100%" height="200" src="//jsrun.net/KxVKp/embedded/all/light" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 ---
 
@@ -212,44 +171,19 @@ var addUp = 100;
 
 算数运算符用于对数字执行算数运算。
 
+<br/>
+
 **加法运算：**
 
+<iframe width="100%" height="200" src="//jsrun.net/pxVKp/embedded/all/light" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
-::: demo [vanilla]
-```html {7}
-<html>
-    <button id="ktDemoPlus">查看结果</button>
-</html>
-<script>
-var a = 4;      //把数字 4 赋值给变量 a
-var b = 5;      //把数字 5 赋值给变量 b
-var c = a + b;  //将计算结果赋值给变量 c
-
-document.querySelector("#ktDemoPlus").onclick = function(){
-        alert(c);
-    };
-</script>
-```
-:::
+<br/>
+<br/>
 
 **乘法运算：**
 
-::: demo [vanilla]
-```html {7}
-<html>
-    <button id="ktDemoMultiplication">查看结果</button>
-</html>
-<script>
-var a = 4;      //把数字 4 赋值给变量 a
-var b = 5;      //把数字 5 赋值给变量 b
-var c = a * b;  //将计算结果赋值给变量 c
+<iframe width="100%" height="200" src="//jsrun.net/kxVKp/embedded/all/light" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
-document.querySelector("#ktDemoMultiplication").onclick = function(){
-        alert(c);
-    };
-</script>
-```
-:::
 
 | 运算符 | 描述 |
 |-----|----|
@@ -284,24 +218,11 @@ document.querySelector("#ktDemoMultiplication").onclick = function(){
 
 `+` 运算符也可用于对字符串进行拼接（concatenate，级联）。
 
+<br/>
+
 **实例：**
 
-::: demo [vanilla]
-```html {7}
-<html>
-    <button id="ktDemoCharacterString">查看结果</button>
-</html>
-<script>
-var str1 = '你好';        //把 你好 赋值给变量 str1
-var str2 = '世界！';      //把 世界！ 赋值给变量 str2
-var str3 = str1 + str2;   //将拼接结果赋值给变量 str3
-
-document.querySelector("#ktDemoCharacterString").onclick = function(){
-        alert(str3);
-    };
-</script>
-```
-:::
+<iframe width="100%" height="200" src="//jsrun.net/YxVKp/embedded/all/light" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 ::: warning 注意
 在用于字符串时，`+` 运算符被称为级联运算符。

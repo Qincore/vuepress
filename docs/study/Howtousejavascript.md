@@ -6,13 +6,7 @@
 
 给 `botton` 按钮添加 `onclick` 事件，并提示“你干嘛点我”。
 
-::: demo [vanilla]
-```html
-<html>
-  <button title="aaa" onclick="alert('你干嘛点我！')">点击</button>
-</html>
-```
-:::
+<iframe width="100%" height="200" src="//jsrun.net/RJVKp/embedded/all/light" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 
 ## `<script>` 标签
 
